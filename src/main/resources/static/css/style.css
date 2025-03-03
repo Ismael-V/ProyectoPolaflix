@@ -1,0 +1,24 @@
+body {
+    font-family: 'Cambria Math', 'Cambria', serif;
+    font-size: 18px
+}
+
+.margen {
+    margin-top: 2em;
+}
+
+@media screen and (min-width : 400px){
+    body {
+        background-color: white;
+        border-color: black;
+        color:black;
+    }
+}
+
+@media screen and (min-width : 800px){
+    body {
+        background-color: black;
+        border-color: white;
+        color:white;
+    }
+}
