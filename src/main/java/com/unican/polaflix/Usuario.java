@@ -143,7 +143,7 @@ public class Usuario {
         }
 
         //Si la serie no esta terminada
-        if(seriesTerminadas.contains(serie)){
+        if(!seriesTerminadas.contains(serie)){
             //Generamos la lista de todos los capitulos
             List<Capitulo> todosLosCapitulos = new ArrayList<>();
             for (Temporada t : serie.getTemporadas()) {
