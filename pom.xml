@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.unican</groupId>
-	<artifactId>polaflix_ismael_perbech_gallego</artifactId>
+	<artifactId>polaflix</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>polaflix</name>
 	<description>Proyecto para una aplicación empresarial sobre internet</description>

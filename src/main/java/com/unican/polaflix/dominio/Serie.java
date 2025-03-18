@@ -1,4 +1,4 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -112,5 +112,39 @@ public class Serie {
 
         //Si no existe devuelve null
         return null;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombreSerie == null) ? 0 : nombreSerie.hashCode());
+        result = prime * result + ((sinopsis == null) ? 0 : sinopsis.hashCode());
+        result = prime * result + ((tipoSerie == null) ? 0 : tipoSerie.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Serie other = (Serie) obj;
+        if (nombreSerie == null) {
+            if (other.nombreSerie != null)
+                return false;
+        } else if (!nombreSerie.equals(other.nombreSerie))
+            return false;
+        if (sinopsis == null) {
+            if (other.sinopsis != null)
+                return false;
+        } else if (!sinopsis.equals(other.sinopsis))
+            return false;
+        if (tipoSerie != other.tipoSerie)
+            return false;
+        return true;
     }
 }

@@ -1,6 +1,7 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Factura {
@@ -8,18 +9,21 @@ public class Factura {
     protected Usuario deudor;
     protected int importeTotalCent = 0;
     private boolean comproBono = false;
+    protected int mes;
+    protected int anyo;
     
     protected List<EntradaFactura> entradas;
 
-    public Factura(Usuario deudor){
+    public Factura(Usuario deudor, LocalDate fecha){
         //Inicializamos las entradas
         this.entradas = new ArrayList<>();
 
         //Ponemos al deudor
         this.deudor = deudor;
 
-        //Le adjuntamos su factura
-        deudor.anyadirFactura(this);
+        //Colocamos el mes y anyo
+        this.mes = fecha.getMonthValue();
+        this.anyo = fecha.getYear();
     }
 
     //------------------------------
@@ -62,9 +66,11 @@ public class Factura {
             this.deudor.quitarFactura(this);
         }
         
-        //Se la transferimos al nuevo
-        deudor.anyadirFactura(this);
-
+        //Se la transferimos al nuevo de existir el usuario
+        if(deudor != null){
+            deudor.anyadirFactura(this);
+        }
+        
         //Cambiamos de deudor
         this.deudor = deudor;
     }
@@ -73,19 +79,23 @@ public class Factura {
         return importeTotalCent;
     }
 
-    //------------------------------
-    //------------------------------
-    //------------------------------
-
-    public void borrarFactura(){
-        //Eliminamos la factura del deudor
-        deudor.quitarFactura(this);
-
-        //Decimos que esta factura no se asocia a ningun deudor
-        deudor = null;
+    public int getMes() {
+        return mes;
     }
 
-    public void anyadirEntrada(EntradaFactura entrada){
+    public int getAnyo() {
+        return anyo;
+    }
+
+    //------------------------------
+    //------------------------------
+    //------------------------------
+
+    public void anyadirEntrada(LocalDate fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie, boolean fueComprado){
+
+        //Creamos la entrada
+        EntradaFactura entrada = new EntradaFactura(fechaVisualizacion, nombreSerie, numeroTemporada, numeroCapitulo, tipoSerie, fueComprado);
+
         //Anyadimos una entrada
         entradas.add(entrada);
 
@@ -130,6 +140,9 @@ public class Factura {
 
                 //Si alguna no fue comprada entonces compro bono
                 this.comproBono |= !entradaFactura.getFueComprado();
+
+                //Si compramos el bono dejamos de comprobar
+                if(this.comproBono) break;
 
                 //Anyadimos el importe teorico
                 importeTeorico += entradaFactura.getImporteCentimos();

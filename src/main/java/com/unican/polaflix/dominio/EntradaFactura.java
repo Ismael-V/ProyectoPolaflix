@@ -1,20 +1,21 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class EntradaFactura {
-    protected Date fechaVisualizacion;
+    protected LocalDate fechaVisualizacion;
     protected String nombreSerie;
     protected int numeroTemporada;
     protected int numeroCapitulo;
     protected int importeCentimos;
     protected boolean fueComprado = false;
 
-    public EntradaFactura(Date fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie){
+    public EntradaFactura(LocalDate fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie, boolean fueComprado){
         this.fechaVisualizacion = fechaVisualizacion;
         this.nombreSerie = nombreSerie;
         this.numeroCapitulo = numeroCapitulo;
         this.numeroTemporada = numeroTemporada;
+        this.fueComprado = fueComprado;
 
         //En funcion de la categoria calculamos el importe a cobrar
         switch(tipoSerie){
@@ -40,11 +41,11 @@ public class EntradaFactura {
     //----> Setters y Getters <-----
     //------------------------------
 
-    public Date getFechaVisualizacion() {
+    public LocalDate getFechaVisualizacion() {
         return fechaVisualizacion;
     }
 
-    public void setFechaVisualizacion(Date fechaVisualizacion) {
+    public void setFechaVisualizacion(LocalDate fechaVisualizacion) {
         this.fechaVisualizacion = fechaVisualizacion;
     }
 

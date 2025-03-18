@@ -1,4 +1,4 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 public class IBAN {
     protected char[] country = new char[2];

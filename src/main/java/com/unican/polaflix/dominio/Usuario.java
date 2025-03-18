@@ -1,8 +1,10 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.time.LocalDate;
 import java.util.List;
+
 
 public class Usuario {
 
@@ -117,8 +119,18 @@ public class Usuario {
     //------------------------------
     //------------------------------
 
+    public Factura crearFactura(){
+
+        //Generamos una factura con la fecha de ahora
+        Factura nuevaFactura = new Factura(this, LocalDate.now());
+        this.facturas.add(nuevaFactura);
+
+        //Devuelve la referencia
+        return nuevaFactura;
+    }
+
     public void anyadirFactura(Factura factura){
-        facturas.add(factura);
+        facturas.remove(factura);
     }
 
     public void quitarFactura(Factura factura){
@@ -132,7 +144,7 @@ public class Usuario {
         }
     }
 
-    public void verCapitulo(Capitulo capitulo){
+    public void verCapitulo(Capitulo capitulo, boolean fueComprado){
         //Obtenemos la serie a la que pertenece el capitulo
         Serie serie = capitulo.getTemporada().getSerie();
 
@@ -154,12 +166,37 @@ public class Usuario {
             Collections.sort(todosLosCapitulos);
 
             //Si el ultimo capitulo de todos los que hay coincide con el que se esta visualizando ahora
-            if(todosLosCapitulos.get(todosLosCapitulos.size() - 1) == capitulo){
+            if(todosLosCapitulos.get(todosLosCapitulos.size() - 1).equals(capitulo)){
                 //Movemos a series terminadas, la serie en cuestion
                 seriesPendientes.remove(serie);
                 seriesTerminadas.add(serie);
             }
         }
+
+        //Ahora se generara la entrada de la factura correspondiente, obtenemos primero la fecha
+        LocalDate ahora = LocalDate.now();
+
+        //Esta sera la factura que gestionemos
+        Factura factura = null;
+
+        //Para todas las facturas que hay en el sistema
+        for(Factura f : this.facturas){
+
+            //Si encontramos la factura de este mes y anyo, la tomamos
+            if(f.getAnyo() == ahora.getYear() && f.getMes() == ahora.getMonthValue()){
+                factura = f;
+                break;
+            }
+
+        }
+
+        //Si no se ha encontrado la generamos
+        if(factura == null){
+            factura = this.crearFactura();
+        }
+
+        //Con esta factura nueva, generamos la entrada
+        factura.anyadirEntrada(ahora, serie.getNombreSerie(), capitulo.getTemporada().getNumeroTemporada(), capitulo.getNumeroCapitulo(), serie.getTipoSerie(), fueComprado);
     }
 
     public List<Capitulo> obtenerCapitulosVistos(Serie serie){

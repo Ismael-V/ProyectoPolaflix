@@ -1,4 +1,4 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 
 import java.util.HashSet;

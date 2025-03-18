@@ -1,4 +1,4 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,13 @@ public class Temporada {
 
     protected List<Capitulo> capitulos;
 
-    Temporada(Serie serie, int numeroTemporada){
+    public Temporada(Serie serie, int numeroTemporada){
         this.capitulos = new ArrayList<>();
         this.serie = serie;
         this.numeroTemporada = numeroTemporada;
+
+        //Anyadimos la temporada correspondiente
+        serie.anyadirTemporada(this);
     }
 
     //------------------------------
@@ -39,7 +42,7 @@ public class Temporada {
         return capitulos;
     }
 
-    public void setCapitulos(List<Capitulo> capitulos) {
+    public void setCapitulos(List<Capitulo> capitulos) throws Exception {
         
         //Para cada capitulo en capitulos
         for (Capitulo capitulo : capitulos) {
@@ -47,7 +50,7 @@ public class Temporada {
             capitulo.getTemporada().quitarCapitulo(capitulo);
 
             //Nos aseguramos de que su nueva temporada es esta
-            capitulo.setTemporada(this);
+            if(capitulo.getTemporada() != this) throw new Exception("El capitulo, anyadido no pertenece a la temporada correspondiente");
         }
 
         this.capitulos = capitulos;
@@ -58,14 +61,8 @@ public class Temporada {
     //------------------------------
 
     public void anyadirCapitulo(Capitulo capitulo){
-        //Si ya estaba adscrita a una temporada, lo quitamos de ahi
-        capitulo.getTemporada().quitarCapitulo(capitulo);
-
         //Anyadimos el capitulo
         capitulos.add(capitulo);
-
-        //Ponemos de temporada, esta temporada
-        capitulo.setTemporada(this);
     }
 
     public void quitarCapitulo(Capitulo capitulo){
@@ -82,5 +79,33 @@ public class Temporada {
 
         //Si no existe devuelve null
         return null;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((serie == null) ? 0 : serie.hashCode());
+        result = prime * result + numeroTemporada;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Temporada other = (Temporada) obj;
+        if (serie == null) {
+            if (other.serie != null)
+                return false;
+        } else if (!serie.equals(other.serie))
+            return false;
+        if (numeroTemporada != other.numeroTemporada)
+            return false;
+        return true;
     }
 }

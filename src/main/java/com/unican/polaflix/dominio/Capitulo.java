@@ -1,4 +1,4 @@
-package com.unican.polaflix;
+package com.unican.polaflix.dominio;
 
 public class Capitulo implements Comparable<Capitulo> {
     protected Temporada temporada;
@@ -11,6 +11,8 @@ public class Capitulo implements Comparable<Capitulo> {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.numeroCapitulo = numeroCapitulo;
+
+        temporada.anyadirCapitulo(this);
     }
 
     //------------------------------
@@ -19,17 +21,6 @@ public class Capitulo implements Comparable<Capitulo> {
 
     public Temporada getTemporada() {
         return temporada;
-    }
-
-    public void setTemporada(Temporada temporada) {
-        //Quitamos el capitulo de la temporada previa
-        this.temporada.quitarCapitulo(this);
-
-        //Ponemos el capitulo en la temporada nueva
-        temporada.anyadirCapitulo(this);
-
-        //Actualizamos la temporada
-        this.temporada = temporada;
     }
 
     public String getTitulo() {
@@ -95,5 +86,44 @@ public class Capitulo implements Comparable<Capitulo> {
         //De lo contrario son el mismo capitulo
         return 0;
     }
-    
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((temporada == null) ? 0 : temporada.hashCode());
+        result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
+        result = prime * result + ((descripcion == null) ? 0 : descripcion.hashCode());
+        result = prime * result + numeroCapitulo;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Capitulo other = (Capitulo) obj;
+        if (temporada == null) {
+            if (other.temporada != null)
+                return false;
+        } else if (!temporada.equals(other.temporada))
+            return false;
+        if (titulo == null) {
+            if (other.titulo != null)
+                return false;
+        } else if (!titulo.equals(other.titulo))
+            return false;
+        if (descripcion == null) {
+            if (other.descripcion != null)
+                return false;
+        } else if (!descripcion.equals(other.descripcion))
+            return false;
+        if (numeroCapitulo != other.numeroCapitulo)
+            return false;
+        return true;
+    }
 }
