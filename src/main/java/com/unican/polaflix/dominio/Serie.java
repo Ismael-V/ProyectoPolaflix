@@ -5,13 +5,29 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+@Entity
 public class Serie {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id_serie;
+
     protected String nombreSerie;
+
     protected String sinopsis;
     protected Categoria tipoSerie;
 
+    @OneToMany
     protected Set<Artista> artistas;
+
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
     protected List<Temporada> temporadas;
 
     public Serie(String nombreSerie, String sinopsis, Categoria tipoSerie){

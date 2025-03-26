@@ -4,14 +4,30 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+@Entity
 public class Factura {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id_factura;
+
+    @ManyToOne
     protected Usuario deudor;
+
     protected int importeTotalCent = 0;
     private boolean comproBono = false;
     protected int mes;
     protected int anyo;
     
+    @OneToMany(mappedBy = "id_factura", cascade = CascadeType.ALL)
     protected List<EntradaFactura> entradas;
 
     public Factura(Usuario deudor, LocalDate fecha){

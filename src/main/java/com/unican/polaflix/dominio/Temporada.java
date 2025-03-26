@@ -3,10 +3,26 @@ package com.unican.polaflix.dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+@Entity
 public class Temporada {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id_temporada;
+
+    @ManyToOne
     protected Serie serie;
     protected int numeroTemporada;
 
+    @OneToMany(mappedBy = "temporada", cascade = CascadeType.ALL)
     protected List<Capitulo> capitulos;
 
     public Temporada(Serie serie, int numeroTemporada){

@@ -2,7 +2,20 @@ package com.unican.polaflix.dominio;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class EntradaFactura {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id_entrada_factura;
+
+    private int id_factura;
+
     protected LocalDate fechaVisualizacion;
     protected String nombreSerie;
     protected int numeroTemporada;

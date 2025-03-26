@@ -1,5 +1,8 @@
 package com.unican.polaflix.dominio;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class IBAN {
     protected char[] country = new char[2];
     protected char[] controlDigits = new char[2];

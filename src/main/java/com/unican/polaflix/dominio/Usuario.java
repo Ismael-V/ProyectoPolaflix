@@ -5,17 +5,34 @@ import java.util.Collections;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
+@Entity
 public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id_usuario;
 
     protected String nombre;
     protected String password;
     protected IBAN cuenta;
 
+    @OneToMany(mappedBy = "deudor",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     protected List<Factura> facturas;
 
+    @OneToMany
     protected List<Serie> seriesEnCurso;
+
+    @OneToMany
     protected List<Serie> seriesPendientes;
+
+    @OneToMany
     protected List<Serie> seriesTerminadas;
 
     public Usuario(String nombre, String password, IBAN cuenta){

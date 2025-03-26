@@ -1,7 +1,21 @@
 package com.unican.polaflix.dominio;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class Capitulo implements Comparable<Capitulo> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    int id_capitulo;
+
+    @ManyToOne
     protected Temporada temporada;
+    
     protected String titulo;
     protected String descripcion;
     protected int numeroCapitulo;
