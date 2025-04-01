@@ -1,8 +1,5 @@
 package com.unican.polaflix.dominio;
 
-
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.ElementCollection;
@@ -22,6 +19,8 @@ public class Artista {
 
     @ElementCollection
     protected Set<Rol> rol;
+
+    protected Artista(){}
 
     Artista(String nombre){
         

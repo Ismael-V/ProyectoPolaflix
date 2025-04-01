@@ -5,7 +5,11 @@ import java.util.Collections;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,11 +23,14 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id_usuario;
 
+    @Column(unique = true)
     protected String nombre;
     protected String password;
     protected IBAN cuenta;
 
-    @OneToMany(mappedBy = "deudor",  cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+    //Referenciamos la tabla de Usuarios y Facturas desde esta relacion
+    @OneToMany(mappedBy = "deudor", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     protected List<Factura> facturas;
 
     @OneToMany
@@ -34,6 +41,8 @@ public class Usuario {
 
     @OneToMany
     protected List<Serie> seriesTerminadas;
+
+    protected Usuario(){}
 
     public Usuario(String nombre, String password, IBAN cuenta){
         this.seriesEnCurso = new ArrayList<>();

@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -19,7 +24,14 @@ public class Factura {
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id_factura;
 
-    @ManyToOne
+    //Generamos una tabla intermedia para poder dejar las facturas a pesar de borrar usuario
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    @JoinTable(
+        name = "Usuario_Factura",  // Nombre de la tabla intermedia
+        joinColumns = @JoinColumn(name = "factura"),
+        inverseJoinColumns = @JoinColumn(name = "deudor")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     protected Usuario deudor;
 
     protected int importeTotalCent = 0;
@@ -29,6 +41,8 @@ public class Factura {
     
     @OneToMany(mappedBy = "id_factura", cascade = CascadeType.ALL)
     protected List<EntradaFactura> entradas;
+
+    protected Factura(){}
 
     public Factura(Usuario deudor, LocalDate fecha){
         //Inicializamos las entradas

@@ -23,6 +23,8 @@ public class EntradaFactura {
     protected int importeCentimos;
     protected boolean fueComprado = false;
 
+    protected EntradaFactura(){}
+
     public EntradaFactura(LocalDate fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie, boolean fueComprado){
         this.fechaVisualizacion = fechaVisualizacion;
         this.nombreSerie = nombreSerie;

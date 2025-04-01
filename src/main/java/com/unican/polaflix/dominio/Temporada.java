@@ -25,6 +25,8 @@ public class Temporada {
     @OneToMany(mappedBy = "temporada", cascade = CascadeType.ALL)
     protected List<Capitulo> capitulos;
 
+    protected Temporada(){}
+
     public Temporada(Serie serie, int numeroTemporada){
         this.capitulos = new ArrayList<>();
         this.serie = serie;

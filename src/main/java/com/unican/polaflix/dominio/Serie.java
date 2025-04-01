@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class Serie {
 
     protected String nombreSerie;
 
+    @Column(length = 4096)
     protected String sinopsis;
     protected Categoria tipoSerie;
 
@@ -29,6 +31,8 @@ public class Serie {
 
     @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
     protected List<Temporada> temporadas;
+
+    protected Serie(){}
 
     public Serie(String nombreSerie, String sinopsis, Categoria tipoSerie){
         this.artistas = new HashSet<>();

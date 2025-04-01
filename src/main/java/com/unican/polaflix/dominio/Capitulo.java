@@ -1,5 +1,6 @@
 package com.unican.polaflix.dominio;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,8 +18,12 @@ public class Capitulo implements Comparable<Capitulo> {
     protected Temporada temporada;
     
     protected String titulo;
+
+    @Column(length = 4096)
     protected String descripcion;
     protected int numeroCapitulo;
+
+    protected Capitulo(){}
 
     public Capitulo(Temporada temporada, String titulo, String descripcion, int numeroCapitulo){
         this.temporada = temporada;
