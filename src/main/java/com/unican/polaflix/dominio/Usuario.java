@@ -214,6 +214,18 @@ public class Usuario {
                 break;
             }
 
+            //Para todas las entradas de cada una de las facturas
+            for(EntradaFactura ef : f.getEntradas()){
+
+                //Si ya hemos visto el capitulo
+                if( ef.getNombreSerie() == serie.getNombreSerie() && 
+                    ef.getNumeroTemporada() == capitulo.getTemporada().getNumeroTemporada() &&
+                    ef.getNumeroCapitulo() == capitulo.getNumeroCapitulo()){
+
+                        //No generamos la entrada en de factura porque ya poseemos el capitulo
+                        return;
+                    }
+            }
         }
 
         //Si no se ha encontrado la generamos
