@@ -26,7 +26,7 @@ public class Serie {
     protected String sinopsis;
     protected Categoria tipoSerie;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     protected Set<Artista> artistas;
 
     @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)

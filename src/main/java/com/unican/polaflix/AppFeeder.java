@@ -1,9 +1,12 @@
 package com.unican.polaflix;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import com.unican.polaflix.dominio.*;
+import com.unican.polaflix.repositories.ArtistaRepository;
 import com.unican.polaflix.repositories.SerieRepository;
 import com.unican.polaflix.repositories.UsuarioRepository;
 
@@ -17,6 +20,9 @@ public class AppFeeder implements CommandLineRunner {
 
 	@Autowired
 	UsuarioRepository ur;
+
+	@Autowired 
+	ArtistaRepository ar;
 
 	@Transactional
 	public void persist(Usuario usr, Serie serie) {
@@ -179,6 +185,11 @@ public class AppFeeder implements CommandLineRunner {
 		NieRAutomata_T1.anyadirCapitulo(NieRAutomata_T1_C11);
 		NieRAutomata_T1.anyadirCapitulo(NieRAutomata_T1_C12);
 
+		Artista art_1 = new Artista("Yui Ishikawa");
+		art_1.anyadirRol(Rol.ACTOR);
+
+		NieRAutomata.anyadirArtista(art_1);
+
 		sr.save(NieRAutomata);
 
 		return NieRAutomata;
@@ -188,6 +199,14 @@ public class AppFeeder implements CommandLineRunner {
 	public void remove(Usuario usr){
 		Usuario u = ur.getUsuarioByNombre(usr.getNombre()).orElse(null);
 		ur.delete(u);
+	}
+
+	@Transactional 
+	public String getFirstSerie(String prompt){
+		List<Serie> resultados = sr.findBynombreSerieLike(prompt + "%");
+
+		if(resultados.size() == 0) return null;
+		return resultados.get(0).getNombreSerie();
 	}
 	
 	@Override
@@ -220,7 +239,10 @@ public class AppFeeder implements CommandLineRunner {
 		//remove(Ismael);
 
 		System.out.println("Coste en centimos: " + Integer.toString(Ismael.getFacturas().get(0).getImporteTotalCent()));
+		System.out.println(getFirstSerie("O"));
+		System.out.println(ar.getBynombre("Yui Ishikawa").orElse(null).getNombre());
 		
+
 		System.out.println("Application feeded");
 	}
 }

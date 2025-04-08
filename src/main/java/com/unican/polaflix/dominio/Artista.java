@@ -1,5 +1,6 @@
 package com.unican.polaflix.dominio;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.ElementCollection;
@@ -17,12 +18,20 @@ public class Artista {
 
     protected String nombre;
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     @ElementCollection
     protected Set<Rol> rol;
 
     protected Artista(){}
 
-    Artista(String nombre){
+    public Artista(String nombre){
         
         //this.rol = new HashSet<>();
         this.nombre = nombre;
@@ -33,11 +42,13 @@ public class Artista {
     //------------------------------
 
     public void anyadirRol(Rol rol){
-        //this.rol.add(rol);
+        if(this.rol == null) this.rol = new HashSet<Rol>();
+        this.rol.add(rol);
     }
 
     public void quitarRol(Rol rol){
-        //this.rol.remove(rol);
+        if(this.rol == null) this.rol = new HashSet<Rol>();
+        this.rol.remove(rol);
     }
 
     //------------------------------
