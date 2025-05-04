@@ -8,6 +8,12 @@ import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.unican.polaflix.restctrl.Views;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,29 +23,40 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@JsonPropertyOrder({"id-usuario", "nombre", "facturas", "series-en-curso", "series-pendientes", "series-terminadas"})
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("id-usuario")
+    @JsonView({Views.VistaUsuario.class})
     int id_usuario;
 
     @Column(unique = true)
+    @JsonProperty("nombre")
+    @JsonView({Views.VistaUsuario.class})
     protected String nombre;
+
     protected String password;
+    
     protected IBAN cuenta;
 
     //Referenciamos la tabla de Usuarios y Facturas desde esta relacion
     @OneToMany(mappedBy = "deudor", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     protected List<Factura> facturas;
 
     @OneToMany
+    @JsonIgnore
     protected List<Serie> seriesEnCurso;
 
     @OneToMany
+    @JsonIgnore
     protected List<Serie> seriesPendientes;
 
     @OneToMany
+    @JsonIgnore
     protected List<Serie> seriesTerminadas;
 
     protected Usuario(){}
@@ -57,6 +74,54 @@ public class Usuario {
     //------------------------------
     //----> Setters y Getters <-----
     //------------------------------
+
+    @JsonProperty("series-en-curso")
+    @JsonView({Views.VistaUsuario.class})
+    public List<String> nombresDeSeriesEnCurso(){
+        List<String> nombres = new ArrayList<String>();
+
+        for (Serie s: seriesEnCurso) {
+            nombres.add(s.getNombreSerie());
+        }
+
+        return nombres;
+    }
+
+    @JsonProperty("series-pendientes")
+    @JsonView({Views.VistaUsuario.class})
+    public List<String> nombresDeSeriesPendientes(){
+        List<String> nombres = new ArrayList<String>();
+
+        for (Serie s: seriesPendientes) {
+            nombres.add(s.getNombreSerie());
+        }
+
+        return nombres;
+    }
+
+    @JsonProperty("series-terminadas")
+    @JsonView({Views.VistaUsuario.class})
+    public List<String> nombresDeSeriesTerminadas(){
+        List<String> nombres = new ArrayList<String>();
+
+        for (Serie s: seriesTerminadas) {
+            nombres.add(s.getNombreSerie());
+        }
+
+        return nombres;
+    }
+
+    @JsonProperty("facturas")
+    @JsonView({Views.VistaUsuario.class})
+    public List<Integer> idsDeFacturas(){
+        List<Integer> ids = new ArrayList<Integer>();
+
+        for (Factura f: facturas) {
+            ids.add(f.getIdFactura());
+        }
+
+        return ids;
+    }
 
     public List<Factura> getFacturas() {
         return facturas;
@@ -171,8 +236,19 @@ public class Usuario {
     }
 
     public void verCapitulo(Capitulo capitulo, boolean fueComprado){
+
+       
+
         //Obtenemos la serie a la que pertenece el capitulo
         Serie serie = capitulo.getTemporada().getSerie();
+
+        //Obtenemos los capitulos vistos de esta serie
+        List<Capitulo> vistos = obtenerCapitulosVistos(serie);
+
+        //Si ya hemos visto el capitulo salimos
+        if(vistos.contains(capitulo)){
+            return;
+        }
 
         //Si la serie esta en curso, la pasamos a pendientes
         if(seriesEnCurso.contains(serie)){

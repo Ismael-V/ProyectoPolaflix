@@ -1,5 +1,11 @@
 package com.unican.polaflix.dominio;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.unican.polaflix.restctrl.Views;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@JsonPropertyOrder({"numero-temporada", "numero-capitulo", "titulo", "descripcion"})
 public class Capitulo implements Comparable<Capitulo> {
 
     @Id
@@ -15,12 +22,20 @@ public class Capitulo implements Comparable<Capitulo> {
     int id_capitulo;
 
     @ManyToOne
+    @JsonBackReference
     protected Temporada temporada;
     
+    @JsonProperty("titulo")
+    @JsonView({Views.VistaTemporada.class})
     protected String titulo;
 
     @Column(length = 4096)
+    @JsonProperty("descripcion")
+    @JsonView({Views.VistaTemporada.class})
     protected String descripcion;
+
+    @JsonProperty("numero-capitulo")
+    @JsonView({Views.VistaTemporada.class})
     protected int numeroCapitulo;
 
     protected Capitulo(){}
@@ -37,6 +52,12 @@ public class Capitulo implements Comparable<Capitulo> {
     //------------------------------
     //----> Setters y Getters <-----
     //------------------------------
+
+    @JsonProperty("numero-temporada")
+    @JsonView({Views.VistaTemporada.class})
+    public int numeroDeTemporada(){
+        return temporada.getNumeroTemporada();
+    }
 
     public Temporada getTemporada() {
         return temporada;

@@ -2,30 +2,58 @@ package com.unican.polaflix.dominio;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.unican.polaflix.restctrl.Views;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
+@JsonPropertyOrder({"fecha-visualizacion", "nombre-serie", "numero-temporada", "numero-capitulo", "importe-centimos", "fue-comprado"})
 public class EntradaFactura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id_entrada_factura;
 
-    private int id_factura;
+    @ManyToOne
+    @JoinColumn(name = "id_factura", referencedColumnName = "idFactura")
+    Factura factura;
 
+    @JsonProperty("fecha-visualizacion")
+    @JsonView({Views.VistaFactura.class})
     protected LocalDate fechaVisualizacion;
+
+    @JsonProperty("nombre-serie")
+    @JsonView({Views.VistaFactura.class})
     protected String nombreSerie;
+
+    @JsonProperty("numero-temporada")
+    @JsonView({Views.VistaFactura.class})
     protected int numeroTemporada;
+
+    @JsonProperty("numero-capitulo")
+    @JsonView({Views.VistaFactura.class})
     protected int numeroCapitulo;
+
+    @JsonProperty("importe-centimos")
+    @JsonView({Views.VistaFactura.class})
     protected int importeCentimos;
+
+    @JsonProperty("fue-comprado")
+    @JsonView({Views.VistaFactura.class})
     protected boolean fueComprado = false;
 
     protected EntradaFactura(){}
 
-    public EntradaFactura(LocalDate fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie, boolean fueComprado){
+    public EntradaFactura(Factura factura, LocalDate fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie, boolean fueComprado){
+        this.factura = factura;
         this.fechaVisualizacion = fechaVisualizacion;
         this.nombreSerie = nombreSerie;
         this.numeroCapitulo = numeroCapitulo;

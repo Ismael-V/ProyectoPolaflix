@@ -5,6 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.unican.polaflix.restctrl.Views;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,22 +20,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@JsonPropertyOrder({"nombre-serie", "sinopsis", "tipo-serie", "artistas", "temporadas"})
 public class Serie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id_serie;
 
+    @JsonProperty("nombre-serie")
+    @JsonView({Views.VistaSerie.class})
     protected String nombreSerie;
 
     @Column(length = 4096)
+    @JsonProperty("sinopsis")
+    @JsonView({Views.VistaSerie.class})
     protected String sinopsis;
+
+    @JsonProperty("tipo-serie")
+    @JsonView({Views.VistaSerie.class})
     protected Categoria tipoSerie;
 
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonProperty("artistas")
+    @JsonView({Views.VistaSerie.class})
     protected Set<Artista> artistas;
 
     @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
+    @JsonProperty("temporadas")
+    @JsonManagedReference
     protected List<Temporada> temporadas;
 
     protected Serie(){}
@@ -45,6 +63,19 @@ public class Serie {
     //------------------------------
     //----> Setters y Getters <-----
     //------------------------------
+
+    @JsonProperty("temporadas")
+    @JsonManagedReference
+    @JsonView({Views.VistaSerie.class})
+    public List<Integer> numerosDeTemporada(){
+        List<Integer> numeros = new ArrayList<Integer>();
+
+        for (Temporada t : temporadas) {
+            numeros.add(t.getNumeroTemporada());
+        }
+
+        return numeros;
+    }
 
     public String getNombreSerie() {
         return nombreSerie;

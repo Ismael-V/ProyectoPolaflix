@@ -7,6 +7,11 @@ import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.unican.polaflix.restctrl.Views;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,11 +23,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@JsonPropertyOrder({"importe-total", "compro-bono", "mes", "anyo", "entradas"})
 public class Factura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int id_factura;
+    @JsonProperty("id-factura")
+    private int idFactura;
 
     //Generamos una tabla intermedia para poder dejar las facturas a pesar de borrar usuario
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
@@ -34,15 +41,34 @@ public class Factura {
     @OnDelete(action = OnDeleteAction.CASCADE)
     protected Usuario deudor;
 
+   
+    @JsonProperty("importe-total")
+    @JsonView({Views.VistaFactura.class})
     protected int importeTotalCent = 0;
+    
+    @JsonProperty("compro-bono")
+    @JsonView({Views.VistaFactura.class})
     private boolean comproBono = false;
+
+    @JsonProperty("mes")
+    @JsonView({Views.VistaFactura.class})
     protected int mes;
+
+    @JsonProperty("anyo")
+    @JsonView({Views.VistaFactura.class})
     protected int anyo;
     
-    @OneToMany(mappedBy = "id_factura", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
+    @JsonProperty("entradas")
+    @JsonView({Views.VistaFactura.class})
     protected List<EntradaFactura> entradas;
 
     protected Factura(){}
+
+    @JsonView({Views.VistaUsuario.class})
+    protected int getIdFactura(){
+        return idFactura;
+    }
 
     public Factura(Usuario deudor, LocalDate fecha){
         //Inicializamos las entradas
@@ -124,7 +150,7 @@ public class Factura {
     public void anyadirEntrada(LocalDate fechaVisualizacion, String nombreSerie, int numeroTemporada, int numeroCapitulo, Categoria tipoSerie, boolean fueComprado){
 
         //Creamos la entrada
-        EntradaFactura entrada = new EntradaFactura(fechaVisualizacion, nombreSerie, numeroTemporada, numeroCapitulo, tipoSerie, fueComprado);
+        EntradaFactura entrada = new EntradaFactura(this, fechaVisualizacion, nombreSerie, numeroTemporada, numeroCapitulo, tipoSerie, fueComprado);
 
         //Anyadimos una entrada
         entradas.add(entrada);

@@ -3,6 +3,13 @@ package com.unican.polaflix.dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.unican.polaflix.restctrl.Views;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@JsonPropertyOrder({"nombre-serie", "numero-temporada", "capitulos"})
 public class Temporada {
 
     @Id
@@ -19,10 +27,17 @@ public class Temporada {
     int id_temporada;
 
     @ManyToOne
+    @JsonBackReference
     protected Serie serie;
+
+    @JsonProperty("numero-temporada")
+    @JsonView({Views.VistaTemporada.class})
     protected int numeroTemporada;
 
     @OneToMany(mappedBy = "temporada", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @JsonProperty("capitulos")
+    @JsonView({Views.VistaTemporada.class})
     protected List<Capitulo> capitulos;
 
     protected Temporada(){}
@@ -39,6 +54,12 @@ public class Temporada {
     //------------------------------
     //----> Setters y Getters <-----
     //------------------------------
+
+    @JsonProperty("nombre-serie")
+    @JsonView({Views.VistaTemporada.class})
+    public String nombreDeSerie(){
+        return serie.getNombreSerie();
+    }
 
     public Serie getSerie() {
         return serie;
