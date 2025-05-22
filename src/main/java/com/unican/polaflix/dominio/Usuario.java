@@ -44,19 +44,23 @@ public class Usuario {
     //Referenciamos la tabla de Usuarios y Facturas desde esta relacion
     @OneToMany(mappedBy = "deudor", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+    @JsonProperty("facturas")
+    @JsonView({Views.VistaUsuario.class})
     protected List<Factura> facturas;
 
     @OneToMany
-    @JsonIgnore
+    @JsonProperty("series-en-curso")
+    @JsonView({Views.VistaUsuario.class})
     protected List<Serie> seriesEnCurso;
 
     @OneToMany
-    @JsonIgnore
+    @JsonProperty("series-pendientes")
+    @JsonView({Views.VistaUsuario.class})
     protected List<Serie> seriesPendientes;
 
     @OneToMany
-    @JsonIgnore
+    @JsonProperty("series-terminadas")
+    @JsonView({Views.VistaUsuario.class})
     protected List<Serie> seriesTerminadas;
 
     protected Usuario(){}
@@ -74,54 +78,6 @@ public class Usuario {
     //------------------------------
     //----> Setters y Getters <-----
     //------------------------------
-
-    @JsonProperty("series-en-curso")
-    @JsonView({Views.VistaUsuario.class})
-    public List<String> nombresDeSeriesEnCurso(){
-        List<String> nombres = new ArrayList<String>();
-
-        for (Serie s: seriesEnCurso) {
-            nombres.add(s.getNombreSerie());
-        }
-
-        return nombres;
-    }
-
-    @JsonProperty("series-pendientes")
-    @JsonView({Views.VistaUsuario.class})
-    public List<String> nombresDeSeriesPendientes(){
-        List<String> nombres = new ArrayList<String>();
-
-        for (Serie s: seriesPendientes) {
-            nombres.add(s.getNombreSerie());
-        }
-
-        return nombres;
-    }
-
-    @JsonProperty("series-terminadas")
-    @JsonView({Views.VistaUsuario.class})
-    public List<String> nombresDeSeriesTerminadas(){
-        List<String> nombres = new ArrayList<String>();
-
-        for (Serie s: seriesTerminadas) {
-            nombres.add(s.getNombreSerie());
-        }
-
-        return nombres;
-    }
-
-    @JsonProperty("facturas")
-    @JsonView({Views.VistaUsuario.class})
-    public List<Integer> idsDeFacturas(){
-        List<Integer> ids = new ArrayList<Integer>();
-
-        for (Factura f: facturas) {
-            ids.add(f.getIdFactura());
-        }
-
-        return ids;
-    }
 
     public List<Factura> getFacturas() {
         return facturas;

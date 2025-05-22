@@ -13,4 +13,5 @@ public interface SerieRepository extends JpaRepository<Serie, Integer> {
     
     public List<Serie> findBynombreSerieLike(String nombre);
     public Optional<Serie> getBynombreSerie(String nombre);
+    public Optional<Serie> getByidSerie(int idSerie);
 }

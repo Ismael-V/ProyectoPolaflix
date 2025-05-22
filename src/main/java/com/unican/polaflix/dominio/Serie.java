@@ -20,15 +20,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-@JsonPropertyOrder({"nombre-serie", "sinopsis", "tipo-serie", "artistas", "temporadas"})
+@JsonPropertyOrder({"id-serie", "nombre-serie", "sinopsis", "tipo-serie", "artistas", "temporadas"})
 public class Serie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int id_serie;
+    @JsonProperty("id-serie")
+    @JsonView({Views.VistaUsuario.class})
+    int idSerie;
 
     @JsonProperty("nombre-serie")
-    @JsonView({Views.VistaSerie.class})
+    @JsonView({Views.VistaSerie.class, Views.VistaUsuario.class})
     protected String nombreSerie;
 
     @Column(length = 4096)
@@ -48,6 +50,7 @@ public class Serie {
     @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
     @JsonProperty("temporadas")
     @JsonManagedReference
+    @JsonView({Views.VistaSerie.class})
     protected List<Temporada> temporadas;
 
     protected Serie(){}
@@ -63,19 +66,6 @@ public class Serie {
     //------------------------------
     //----> Setters y Getters <-----
     //------------------------------
-
-    @JsonProperty("temporadas")
-    @JsonManagedReference
-    @JsonView({Views.VistaSerie.class})
-    public List<Integer> numerosDeTemporada(){
-        List<Integer> numeros = new ArrayList<Integer>();
-
-        for (Temporada t : temporadas) {
-            numeros.add(t.getNumeroTemporada());
-        }
-
-        return numeros;
-    }
 
     public String getNombreSerie() {
         return nombreSerie;

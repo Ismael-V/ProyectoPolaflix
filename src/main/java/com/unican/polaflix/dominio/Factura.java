@@ -23,12 +23,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-@JsonPropertyOrder({"importe-total", "compro-bono", "mes", "anyo", "entradas"})
+@JsonPropertyOrder({"id-factura","importe-total", "compro-bono", "mes", "anyo", "entradas"})
 public class Factura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty("id-factura")
+    @JsonView(Views.VistaUsuario.class)
     private int idFactura;
 
     //Generamos una tabla intermedia para poder dejar las facturas a pesar de borrar usuario
@@ -51,11 +52,11 @@ public class Factura {
     private boolean comproBono = false;
 
     @JsonProperty("mes")
-    @JsonView({Views.VistaFactura.class})
+    @JsonView({Views.VistaFactura.class, Views.VistaUsuario.class})
     protected int mes;
 
     @JsonProperty("anyo")
-    @JsonView({Views.VistaFactura.class})
+    @JsonView({Views.VistaFactura.class, Views.VistaUsuario.class})
     protected int anyo;
     
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)

@@ -28,7 +28,6 @@ public class CapitulosController {
     @Autowired
     UsuarioRepository ur;
 
-
     @Transactional
     public void ismaVeCapitulo(Capitulo c){
         Usuario Ismael = ur.getUsuarioByNombre("Ismael").get();
@@ -40,8 +39,6 @@ public class CapitulosController {
     @JsonView({Views.VistaSerie.class})
     public ResponseEntity<Map<String, String>> getSerie(@RequestHeader("nombre-serie") String nombreSerie, @RequestHeader("temporada") int temporada, @RequestHeader("capitulo") int capitulo) {
         ResponseEntity<Map<String, String>> result;
-
-        System.out.println(nombreSerie);
 
         Optional<Serie> s = sr.getBynombreSerie(nombreSerie);
         

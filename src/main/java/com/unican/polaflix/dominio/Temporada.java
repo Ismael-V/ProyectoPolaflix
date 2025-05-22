@@ -19,11 +19,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-@JsonPropertyOrder({"nombre-serie", "numero-temporada", "capitulos"})
+@JsonPropertyOrder({"id-temporada", "nombre-serie", "numero-temporada", "capitulos"})
 public class Temporada {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("id-temporada")
+    @JsonView({Views.VistaSerie.class})
     int id_temporada;
 
     @ManyToOne
@@ -31,7 +33,7 @@ public class Temporada {
     protected Serie serie;
 
     @JsonProperty("numero-temporada")
-    @JsonView({Views.VistaTemporada.class})
+    @JsonView({Views.VistaSerie.class, Views.VistaTemporada.class})
     protected int numeroTemporada;
 
     @OneToMany(mappedBy = "temporada", cascade = CascadeType.ALL)
