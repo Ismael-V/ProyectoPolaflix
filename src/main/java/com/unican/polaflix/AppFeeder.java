@@ -222,15 +222,15 @@ public class AppFeeder implements CommandLineRunner {
 
 		Capitulo C1_OP = new Capitulo(T1_OP, "El rey de los piratas", "???", 1);
 
-		Ismael.anyadirSerie(OnePiece);
-		Ismael.verCapitulo(C1_OP, true);
+		//Ismael.anyadirSerie(OnePiece);
+		//Ismael.verCapitulo(C1_OP);
 
 		persist(Ismael, OnePiece);
 
 		Ismael.anyadirSerie(NieR);
-		Ismael.verCapitulo(NieR.getTemporadaByNumber(1).getCapituloByNumber(1), true);
-		Ismael.verCapitulo(NieR.getTemporadaByNumber(1).getCapituloByNumber(5), true);
-		Ismael.verCapitulo(NieR.getTemporadaByNumber(1).getCapituloByNumber(12), true);
+		Ismael.verCapitulo(NieR.getTemporadaByNumber(1).getCapituloByNumber(1));
+		Ismael.verCapitulo(NieR.getTemporadaByNumber(1).getCapituloByNumber(5));
+		Ismael.verCapitulo(NieR.getTemporadaByNumber(1).getCapituloByNumber(12));
 
 
 		ur.saveAndFlush(Ismael);

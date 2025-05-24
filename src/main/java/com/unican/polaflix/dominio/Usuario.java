@@ -8,7 +8,6 @@ import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -30,7 +29,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty("id-usuario")
     @JsonView({Views.VistaUsuario.class})
-    int id_usuario;
+    int idUsuario;
 
     @Column(unique = true)
     @JsonProperty("nombre")
@@ -40,6 +39,8 @@ public class Usuario {
     protected String password;
     
     protected IBAN cuenta;
+
+    protected boolean pagoPorCapitulo = true;
 
     //Referenciamos la tabla de Usuarios y Facturas desde esta relacion
     @OneToMany(mappedBy = "deudor", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
@@ -191,9 +192,7 @@ public class Usuario {
         }
     }
 
-    public void verCapitulo(Capitulo capitulo, boolean fueComprado){
-
-       
+    public void verCapitulo(Capitulo capitulo){
 
         //Obtenemos la serie a la que pertenece el capitulo
         Serie serie = capitulo.getTemporada().getSerie();
@@ -266,7 +265,7 @@ public class Usuario {
         }
 
         //Con esta factura nueva, generamos la entrada
-        factura.anyadirEntrada(ahora, serie.getNombreSerie(), capitulo.getTemporada().getNumeroTemporada(), capitulo.getNumeroCapitulo(), serie.getTipoSerie(), fueComprado);
+        factura.anyadirEntrada(ahora, serie.getNombreSerie(), capitulo.getTemporada().getNumeroTemporada(), capitulo.getNumeroCapitulo(), serie.getTipoSerie(), pagoPorCapitulo);
     }
 
     public List<Capitulo> obtenerCapitulosVistos(Serie serie){
